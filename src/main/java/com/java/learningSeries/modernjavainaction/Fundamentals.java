@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static java.util.stream.Collectors.toList;
+
 public class Fundamentals {
 
     public void methodReferences() {
@@ -46,12 +48,32 @@ public class Fundamentals {
         return result;
     }
 
-    static void useIt() {
-        List<Apple> inventory = new ArrayList<>();
+    static void useMethodRefference(List<Apple> inventory) {
         filterApples(inventory, Fundamentals::isGreenApple);
         filterApples(inventory, Fundamentals::isHeavyApple);
     }
 
     //-----------------------------------------------------------------------------------------
+
+    static void useLambda(List<Apple> inventory) {
+        filterApples(inventory, (Apple a) -> Color.GREEN.equals(a.getColor()));
+        filterApples(inventory, (Apple a) -> a.getWeight() > 150);
+    }
+    /**
+     * But if such a lambda exceeds a few lines in length (so that its behavior isn’t instantly clear),
+     * you should instead use a method reference to a method with a descriptive name instead of using
+     * an anonymous lambda. Code clarity should be your guide.
+     */
+
+    //-----------------------------------------------------------------------------------------
+
+    static void useStreams(List<Apple> inventory) {
+        //sequential processing
+        List<Apple> heavyApples =
+                inventory.stream().filter((Apple a) -> a.getWeight() > 150) .collect(toList());
+        //parallel processing
+        List<Apple> heavyApples2 =
+                inventory.parallelStream().filter((Apple a) -> a.getWeight() > 150) .collect(toList());
+    }
 
 }
